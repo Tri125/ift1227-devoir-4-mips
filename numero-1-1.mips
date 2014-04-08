@@ -58,11 +58,11 @@ f_n:
     beq  $t0, 0, add_1
 
     # sub 
-    addi $s2, -1 # (-1)^n vaut -1 avec n impair
+    addi $s2, $zero, -1 # (-1)^n vaut -1 avec n impair
     j    shift
 
 add_1:
-    addi $s2, 1 # (-1)^n vaut -1 avec n impair
+    addi $s2, $zero, 1 # (-1)^n vaut -1 avec n impair
 
 shift:
     move $s0, $s1
