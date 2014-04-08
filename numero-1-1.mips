@@ -1,3 +1,24 @@
+.data 
+buffer: .space 2000
+
+insert_into: .word 4
+str1: .asciiz "Ecrire N\n"
+.text
+
+main:
+la $a0,str1
+li $v0,4
+syscall # Ecrit le message
+
+li $v0, 5
+
+la $a0, buffer
+li $a1, 20
+
+move $t0,$a0
+syscall #Read integer
+
+move $s4, $v0 # Enregistre l'integer dans s4 N
 
 # $s0 contient F à n - 2
 # $s1 contient F à n - 1
@@ -5,7 +26,6 @@
 
 # $s3 contint le compteur
 
-main:
     move $s3, $zero
     addi $s4, $zero, 1
 
