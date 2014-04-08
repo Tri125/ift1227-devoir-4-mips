@@ -1,0 +1,58 @@
+
+# $s0 contient F à n - 2
+# $s1 contient F à n - 1
+# $s2 contient F à n
+
+# $s3 contint le compteur
+
+main:
+    move $s3, $zero
+    addi $s4, $zero, 1
+
+loop:
+    
+    addi $t0, $zero, 1
+
+    beq  $s3, $zero, f_0
+    beq  $s3, $t0, f_1
+    j    f_n
+
+    beq  $s3, $s4, done
+
+f_0:
+    addi $s2, $zero, 0
+    j    shift
+
+f_1:
+    addi $s2, $zero, 1
+    j    shift
+
+f_n:
+    add  $s2, $s2, $s0
+    add  $s2, $s2, $s1
+
+    addi $t0, $zero, 2
+    div  $s3, $t0
+
+    mfhi $t0
+    beq  $t0, 0, add_1
+
+    # sub 
+    addi $s2, -1 # (-1)^n vaut -1 avec n impair
+    j    shift
+
+add_1:
+    addi $s2, 1 # (-1)^n vaut -1 avec n impair
+
+shift:
+    move $s0, $s1
+    move $s1, $s2
+    addi $s3, $s3, 1 # n = n + 1
+    j    loop
+
+done:
+    li   $v0, 1
+    move $a0, $s2
+    syscall
+
+

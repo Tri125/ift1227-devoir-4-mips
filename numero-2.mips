@@ -1,0 +1,71 @@
+.data
+
+    message: .asciiz "Entrez une chaîne de caractère: "
+    input:   .byte   20 # 20 caractère
+    counter: .word   128 # compte les 128 caractère ascii possibles
+
+.text
+
+main:
+    li   $v0, 4        # print string
+    la   $a0, message
+    syscall
+
+    li   $v0, 8        # read string
+    la   $a0, input
+    li   $a1, 20       # read only 20 characters
+    syscall
+
+    addi $t0, $t0, 0
+
+loop:
+    la   $t1, input
+    add  $t1, $t1, $t0
+    lb   $t1, 0($t1)   # $t1 contient la valeur du caractère ascii
+
+    li   $v0, 1        # print char
+    move $a0, $t1
+    syscall
+
+    beq  $t1, $zero, count    # fin de la chaîne
+
+    la   $t2, counter
+    sll  $t1, $t1, 2        # on multiple par 4, car le compteur est en mots
+    add  $t2, $t2, $t1      # t1 contient l'adresse qui compte le caractère
+
+    lw   $t3, 0($t2)        # t2 contient le compte du caractère
+    addi $t3, $t3, 1
+    sw   $t3, 0($t2)
+
+    li   $v0, 1         # print char
+    move $a0, $t3
+    syscall
+
+    addi $t0, $t0, 1    # prochain byte
+
+    j    loop  
+
+    la   $t0, counter   # adresse du compteur
+    la   $t1, counter   # stocke l'adresse du caractère le plus fréquent
+
+    addi $t2, $t0, 512  # adresse du compteur du dernier caractère ascii
+
+count:
+
+    lw   $t3, 0($t0)  # le compte du caractère $t0
+    lw   $t4, 0($t1)  # le compte du caractère le plus courant
+
+    beq  $t0, $t2, done # dernier caractère ascii
+    
+    addi $t0, 4       # prochain mot
+    blt  $t2, $t3, count
+
+    move $t1, $t0 # le caractère le plus courant est celui à l'adresse $t1
+
+    j    count # prochain mot
+
+done:
+
+    li   $v0, 1         # print integer
+    move $a0, $t3
+    syscall

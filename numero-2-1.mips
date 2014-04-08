@@ -1,0 +1,39 @@
+# lit une chaîne de caractère codée avec un décalage sur les lettres impaires
+
+.data
+    message: .asciiz "Texte quelconque que l'on désire décoder en supposant que la lettre la plus fréquente est le e."
+
+.text
+    
+    # @todo lire le message depuis la console
+
+    addi $t0, 116
+    add  $s0, $zero, $t0 # $s0 contiendra l'indice du dernier caractère du message
+
+    addi $s1, 1 
+
+
+next_character:
+    lw   $t0, message # on stocke l'adresse du message
+
+    sub  $sp, $sp, $t0 # la pile va stocker le nombre d'occurence de chaque caractère
+
+    lw   $t1, $sp # on met dans $t1 le nombre d'occurence de la lettre
+    addi $t1, 1   # on l'incrémente de 1
+    sw   $t1, $sp # on le restocke dans la pile
+
+    add  $sp, $sp, $t0 # on réincrémente la pile
+
+    beq  $0, $zero, done # la chaîne se termine sur le caractère \0
+    j    next_character
+
+done:
+
+    # on trouve le caractère le plus fréquent
+    add $s0, $zero, $zero
+
+    lw   $t2, $t0($zero)
+
+    addi $s1, 2
+
+

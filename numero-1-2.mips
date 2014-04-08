@@ -1,0 +1,67 @@
+# évalue la récurrence f_{n} = f_{n - 1} + f_{n - 2} + (-1)^n, f_0 = 0 et f_1 = 1
+
+.data
+    prompt: .asciiz ">>>"
+
+.text
+    la $a0, prompt
+    li $v0, 4
+    syscall
+
+    lw $a0, $v0
+
+    f: # résout un niveau de récurrence
+
+        # $a0 contient l'argument n
+
+        # on préserve le registres $s0
+        addi $sp, -4
+        sw   $s0, 0($sp)
+
+        beq  $a0, $zero, end # n = 0
+        sw   $t0, $zero      # n = 1
+        addi $t0, 1
+        beq  $a0, $t0, end   # n = 1
+        
+        # on sauve $v0
+        addi $sp, -4
+        sw   $v0, 0($sp)
+
+        addi $a0, -1
+        jal f # résout n - 1
+        
+        # somme dans $v0
+        add  $v0, $v0, $sp
+        addi $sp, 4
+
+        # on sauve $v0
+        addi $sp, -4
+        sw   $v0, 0($sp)
+
+        addi $a0, -1
+        jal  f # résout n - 2
+
+        add  $v0, $v0, $sp
+        addi $sp, 4
+
+        addi $a0, 2 # réincrémente $a0
+        sw   $t0, $zero
+        # calcul de -1^n
+        #
+        div $a0, 2
+
+        mfhi $t0
+        beq  $t0, $zero, even
+
+        # le nombre est impair, on soustrait 1
+        addi $v0, -1
+        j    return
+
+    even:
+        addi $v0, 1
+
+    return: # fini, on saute
+        jr
+
+    end: # le programme est terminé, le résultat est sur le dessus de la pile
+        add $v0, $a0, $v0 #
