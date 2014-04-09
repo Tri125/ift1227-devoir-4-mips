@@ -60,12 +60,12 @@ main:
         mfhi $t0
         beq  $t0, $zero, even
     
-        addi $v0, -1
+        addi $v0, $v0, -1
 
         j    return
 
     even:
-        addi $v0, 1 # sinon, n est pair
+        addi $v0, $v0, 1 # sinon, n est pair
 
     return:
 
