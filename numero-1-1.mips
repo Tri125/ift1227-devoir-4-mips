@@ -27,7 +27,7 @@ move $s4, $v0 # Enregistre l'integer dans s4 N
 # $s3 contint le compteur
 
     move $s3, $zero
-    addi $s4, $zero, 1
+    addi $s4, $s4, 1
 
 loop:
     
@@ -35,9 +35,9 @@ loop:
 
     beq  $s3, $zero, f_0
     beq  $s3, $t0, f_1
+    beq  $s3, $s4, done
     j    f_n
 
-    beq  $s3, $s4, done
 
 f_0:
     addi $s2, $zero, 0
