@@ -32,6 +32,12 @@ f: # résout un niveau de récurrence, $a0 contient l'argument n
     n_0:
         bgt  $a0, $zero, n_1 # n = 0
         addi $v0, $v0, 0
+        
+        move $t0, $v0
+	move $a0, $v0
+	li $v0, 1
+	syscall
+	move $v0, $t0
         jr   $ra
 
     n_1:
@@ -39,6 +45,13 @@ f: # résout un niveau de récurrence, $a0 contient l'argument n
         bgt  $a0, $t0, n_n
 
         addi $v0, $v0, 1
+        
+        
+        move $t0, $v0
+	move $a0, $v0
+	li $v0, 1
+	syscall
+	move $v0, $t0
         jr   $ra
 
     n_n:
@@ -79,6 +92,11 @@ f: # résout un niveau de récurrence, $a0 contient l'argument n
         lw   $s0, -4($sp) # on restitue $s0
         lw   $ra, -8($sp)
 
+	move $t0, $v0
+	move $a0, $v0
+	li $v0, 1
+	syscall
+	move $v0, $t0
         jr   $ra
 
 done:
