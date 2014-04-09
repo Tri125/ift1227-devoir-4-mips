@@ -1,24 +1,24 @@
 .data 
-buffer: .space 2000
+    buffer: .space 2000
 
-insert_into: .word 4
-str1: .asciiz "Ecrire N\n"
+    insert_into: .word 4
+    str1: .asciiz "Entrez une valeur pour n: "
+    eol: .asciiz "\n"
 .text
 
 main:
-la $a0,str1
-li $v0,4
+la $a0, str1
+li $v0, 4
 syscall # Ecrit le message
 
 li $v0, 5
 
 la $a0, buffer
 li $a1, 20
-
 move $t0,$a0
 syscall #Read integer
-
 move $s4, $v0 # Enregistre l'integer dans s4 N
+
 
 # $s0 contient F à n - 2
 # $s1 contient F à n - 1
@@ -37,7 +37,6 @@ loop:
     beq  $s3, $t0, f_1
 
     j    f_n
-
 
 f_0:
     addi $s2, $zero, 0
@@ -60,16 +59,24 @@ f_n:
     # sub 
     addi $s2, $s2, -1 # (-1)^n vaut -1 avec n impair
     j    shift
+
 add_1:
     addi $s2, $s2, 1 # (-1)^n vaut -1 avec n pair
 
 shift:
-    move $s0, $s1
-    move $s1, $s2
+    move $s0, $s1    # n = n - 1
+    move $s1, $s2    # n - 1 = n - 2
     addi $s3, $s3, 1 # n = n + 1
     j    loop
 
 done:
     li   $v0, 1
     move $a0, $s2
+    syscall
+
+    la $a0, eol
+    li $v0, 4
+    syscall # saut de ligne
+
+    li   $v0, 10
     syscall

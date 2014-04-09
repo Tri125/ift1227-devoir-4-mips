@@ -1,7 +1,7 @@
 # évalue la récurrence f_{n} = f_{n - 1} + f_{n - 2} + (-1)^n, f_0 = 0 et f_1 = 1
 
 .data
-    prompt: .asciiz ">>>"
+    prompt: .asciiz "Entrez une valeur pour n: "
 
 .text
     la $a0, prompt
@@ -55,12 +55,11 @@
 
         # le nombre est impair, on soustrait 1
         addi $v0, -1
-        j    return
 
-    even:
-        addi $v0, 1
+        jr
 
-    return: # fini, on saute
+        addi $v0, 1 # sinon, n est pair
+
         jr
 
     end: # le programme est terminé, le résultat est sur le dessus de la pile

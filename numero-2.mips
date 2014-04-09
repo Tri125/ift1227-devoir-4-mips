@@ -16,7 +16,7 @@ main:
     li   $a1, 20       # read only 20 characters
     syscall
 
-    addi $t0, $t0, 0
+    addi $t0, $t0, 0   # initialise $t0 à 0
 
 loop:
     la   $t1, input
