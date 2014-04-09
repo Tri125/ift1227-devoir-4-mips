@@ -37,7 +37,7 @@ loop:
     addi $t3, $t3, 1
     sw   $t3, 0($t2)
 
-    li   $v0, 1         # print char
+    li   $v0, 1         # print integer
     move $a0, $t3
     syscall
 
@@ -57,7 +57,7 @@ count:
 
     beq  $t0, $t2, done # dernier caractère ascii
     
-    addi $t0, 4       # prochain mot
+    addi $t0, $t0, 4       # prochain mot
     blt  $t2, $t3, count
 
     move $t1, $t0 # le caractère le plus courant est celui à l'adresse $t1
