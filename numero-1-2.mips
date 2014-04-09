@@ -17,13 +17,13 @@ main:
     syscall
 
     move $a0, $v0
+    addi $v0, $zero, 0 # initialise la somme à zéro
 
     jal f
     j   done
 
-    f: # résout un niveau de récurrence
-    # $a0 contient l'argument n
-    
+f: # résout un niveau de récurrence, $a0 contient l'argument n
+
     n_0:
         bgt  $a0, $zero, n_1 # n = 0
         addi $v0, $v0, 0
@@ -38,9 +38,10 @@ main:
 
     n_n:
 
-        # on stocke $s0 et $s1 dans la pile
-        addi $sp, $sp, -4
-        sw   $s0, 0($sp)
+        # on stocke $s0 dans la pile
+        sw   $s0, -4($sp)
+        sw   $ra, -8($sp)
+        addi $sp, $sp, -8
 
         move $s0, $a0      # on garde n dans $s0
 
@@ -55,12 +56,12 @@ main:
         # calcul de -1^n
         #
         addi $t0, $zero, 2
-        div  $a0, $t0
+        div  $s0, $t0
 
         mfhi $t0
         beq  $t0, $zero, even
     
-        addi $v0, $v0, -1
+        addi $v0, $v0, -1 # n est impair, on décrémente la somme
 
         j    return
 
@@ -69,8 +70,9 @@ main:
 
     return:
 
-        addi $sp, $sp, 4
-        lw   $s0, 0($sp)
+        addi $sp, $sp, 8
+        lw   $s0, -4($sp) # on restitue $s0
+        lw   $ra, -8($sp)
 
         jr   $ra
 
